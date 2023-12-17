@@ -13,18 +13,22 @@ class Hwalang:
         start = "사관생도 신조!"
         end = "이상 점호 끝!"
         start_idx = code.find(start)
+        if start_idx == -1:
+            raise ValueError("악! 열외!")
         end_idx = code.find(end, start_idx + len(start))
+        if end-idx == -1:
+            raise ValueError("악! 열외!")
         self.code = code[start_idx + len(start):end_idx]
         self.code = list(self.code)
 
     def increasePtr(self):
         if self.ptr >= len(self.memory) - 1:
-            raise ValueError("Out of memory")
+            raise ValueError("악! 메모리 열외!")
         self.ptr += 1
 
     def decreasePtr(self):
         if self.ptr <= 0:
-            raise ValueError("Out of memory")
+            raise ValueError("악! 메모리 열외!")
         self.ptr -= 1
 
     def increaseValue(self):
@@ -56,13 +60,13 @@ class Hwalang:
                 stack.append(i)
             elif command == "법":
                 if len(stack) == 0:
-                    raise ValueError("Syntax error")
+                    raise ValueError("악! 조건문 열외!")
                 start_position = stack.pop()
                 self.jumpTo[i] = start_position
                 self.jumpTo[start_position] = i
 
         if stack:
-            raise ValueError("Syntax error")
+            raise ValueError("악! 조건문 열외!")
 
     def run(self):
         while self.pc < len(self.code):
@@ -107,6 +111,6 @@ try:
         hl.run()
         print()  
 except FileNotFoundError:
-    print(f"Error: File '{input_file}' not found.")
-except Exception as e:
-    print(f"Error: {str(e)}")
+    print("악! 입력값 열외!")
+except Exception:
+    print("열외!")
