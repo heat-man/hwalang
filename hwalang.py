@@ -7,7 +7,7 @@ MEMORY = "악! 메모리 열외!"
 CONDITION = "악! 조건물 열외!"
 INPUT = "악! 입력값 열외!"
 ERROR = "열외!"
-DEBUG = 0
+DEBUG = 1
 
 
 class Hwalang:
@@ -16,6 +16,7 @@ class Hwalang:
         self.memory = [0] * size 
         self.code = "" 
         self.ptr = 0  
+        self.ctr = 0
         self.pc = 0  
         self.jumpTo = {} 
 
@@ -33,44 +34,48 @@ class Hwalang:
 
     def increasePtr(self):
         if DEBUG:
-            print(f"#{self.pc} increasePtr")
+            print(f"#{self.ctr} increasePtr")
         if self.ptr >= len(self.memory) - 1:
             raise ValueError(MEMORY)
         self.ptr += 1
 
     def decreasePtr(self):
         if DEBUG:
-            print(f"#{self.pc} decreasePtr")
+            print(f"#{self.ctr} decreasePtr")
         if self.ptr <= 0:
             raise ValueError(MEMORY)
         self.ptr -= 1
 
     def increaseValue(self):
         if DEBUG:
-            print(f"#{self.pc} increaseValue")
+            print(f"#{self.ctr} increaseValue")
         self.memory[self.ptr] += 1
 
     def decreaseValue(self):
         if DEBUG:
-            print(f"#{self.pc} decreaseValue")
+            print(f"#{self.ctr} decreaseValue")
         self.memory[self.ptr] -= 1
 
     def printValue(self):
         if DEBUG:
-            print(f"#{self.pc} printValue")
+            print(f"#{self.ctr} printValue")
         print(chr(self.memory[self.ptr]))
 
     def storingValue(self):
         if DEBUG:
-            print(f"#{self.pc} storingValue")
+            print(f"#{self.ctr} storingValue")
         buffer = int(input())
         if buffer:
             self.memory[self.ptr] = buffer
 
     def jump(self, command):
         if command == "명" and self.memory[self.ptr] == 0:
+            if DEBUG:
+                print(f"#{self.ctr} startPoint")
             self.pc = self.jumpTo[self.pc]
         elif command == "법" and self.memory[self.ptr] != 0:
+            if DEBUG:
+                print(f"#{self.ctr} startPoint")
             self.pc = self.jumpTo[self.pc]
 
     def preprocess(self):
@@ -92,6 +97,7 @@ class Hwalang:
     def run(self):
         while self.pc < len(self.code):
             command = self.code[self.pc]
+            self.ctr = self.pc//3 + 1
 
             if command == "정":
                 self.increasePtr()
