@@ -1,5 +1,14 @@
 import sys
 
+START = "사관생도 신조!"
+END = "이상 점호 끝!"
+KEYWORD = "악! 열외!"
+MEMORY = "악! 메모리 열외!"
+CONDITION = "악! 조건물 열외!"
+INPUT = "악! 입력값 열외!"
+ERROR = "열외!"
+
+
 class Hwalang:
 
     def __init__(self, size=32768):
@@ -10,25 +19,25 @@ class Hwalang:
         self.jumpTo = {} 
 
     def load(self, code):
-        start = "사관생도 신조!"
-        end = "이상 점호 끝!"
+        start = START 
+        end = END
         start_idx = code.find(start)
         if start_idx == -1:
-            raise ValueError("악! 열외!")
+            raise ValueError(KEYWORD)
         end_idx = code.find(end, start_idx + len(start))
-        if end-idx == -1:
-            raise ValueError("악! 열외!")
+        if end_idx == -1:
+            raise ValueError(KEYWORD)
         self.code = code[start_idx + len(start):end_idx]
         self.code = list(self.code)
 
     def increasePtr(self):
         if self.ptr >= len(self.memory) - 1:
-            raise ValueError("악! 메모리 열외!")
+            raise ValueError(MEMORY)
         self.ptr += 1
 
     def decreasePtr(self):
         if self.ptr <= 0:
-            raise ValueError("악! 메모리 열외!")
+            raise ValueError(MEMORY)
         self.ptr -= 1
 
     def increaseValue(self):
@@ -60,13 +69,13 @@ class Hwalang:
                 stack.append(i)
             elif command == "법":
                 if len(stack) == 0:
-                    raise ValueError("악! 조건문 열외!")
+                    raise ValueError(CONIDTION)
                 start_position = stack.pop()
                 self.jumpTo[i] = start_position
                 self.jumpTo[start_position] = i
 
         if stack:
-            raise ValueError("악! 조건문 열외!")
+            raise ValueError(CONDITION)
 
     def run(self):
         while self.pc < len(self.code):
@@ -111,6 +120,6 @@ try:
         hl.run()
         print()  
 except FileNotFoundError:
-    print("악! 입력값 열외!")
+    print(INPUT)
 except Exception:
-    print("열외!")
+    print(ERROR)
