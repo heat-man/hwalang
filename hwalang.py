@@ -7,11 +7,12 @@ MEMORY = "악! 메모리 열외!"
 CONDITION = "악! 조건물 열외!"
 INPUT = "악! 입력값 열외!"
 ERROR = "열외!"
+DEBUG = 0
 
 
 class Hwalang:
 
-    def __init__(self, size=32768):
+    def __init__(self, size=1024):
         self.memory = [0] * size 
         self.code = "" 
         self.ptr = 0  
@@ -31,29 +32,40 @@ class Hwalang:
         self.code = list(self.code)
 
     def increasePtr(self):
+        if DEBUG:
+            print(f"#{self.pc} increasePtr")
         if self.ptr >= len(self.memory) - 1:
             raise ValueError(MEMORY)
         self.ptr += 1
 
     def decreasePtr(self):
+        if DEBUG:
+            print(f"#{self.pc} decreasePtr")
         if self.ptr <= 0:
             raise ValueError(MEMORY)
         self.ptr -= 1
 
     def increaseValue(self):
+        if DEBUG:
+            print(f"#{self.pc} increaseValue")
         self.memory[self.ptr] += 1
 
     def decreaseValue(self):
+        if DEBUG:
+            print(f"#{self.pc} decreaseValue")
         self.memory[self.ptr] -= 1
 
     def printValue(self):
-        sys.stdout.write(chr(self.memory[self.ptr]))
-        sys.stdout.flush()
+        if DEBUG:
+            print(f"#{self.pc} printValue")
+        print(chr(self.memory[self.ptr]))
 
     def storingValue(self):
-        buffer = sys.stdin.read(1)
+        if DEBUG:
+            print(f"#{self.pc} storingValue")
+        buffer = int(input())
         if buffer:
-            self.memory[self.ptr] = ord(buffer)
+            self.memory[self.ptr] = buffer
 
     def jump(self, command):
         if command == "명" and self.memory[self.ptr] == 0:
@@ -118,7 +130,7 @@ try:
         hl.load(code)
         hl.preprocess()
         hl.run()
-        print()  
+        print()
 except FileNotFoundError:
     print(INPUT)
 except Exception:
